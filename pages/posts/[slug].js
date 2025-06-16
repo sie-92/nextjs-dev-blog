@@ -1,31 +1,35 @@
-import { useRouter } from 'next/router';
+import Layout from '../../components/Layout';
+import { getAllPostSlugs, getPostData } from '../../lib/posts';
 import Head from 'next/head';
 
-const postMap = {
-  'getting-started-with-nextjs': {
-    title: 'Getting Started with Next.js',
-    content: 'Next.js is a React framework for production...',
-  },
-  'deploying-to-vercel': {
-    title: 'Deploying to Vercel',
-    content: 'Vercel is the fastest way to deploy Next.js apps...',
-  },
-};
+export async function getStaticPaths() {
+  const paths = getAllPostSlugs();
+  return {
+    paths,
+    fallback: false,
+  };
+}
 
-export default function PostPage() {
-  const router = useRouter();
-  const { slug } = router.query;
-  const post = postMap[slug];
+export async function getStaticProps({ params }) {
+  const postData = await getPostData(params.slug);
+  return {
+    props: {
+      postData,
+    },
+  };
+}
 
-  if (!post) return <p>Loading...</p>;
-
+export default function Post({ postData }) {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <Layout>
       <Head>
-        <title>{post.title}</title>
+        <title>{postData.title}</title>
       </Head>
-      <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-      <p>{post.content}</p>
-    </div>
+      <article>
+        <h1 className="text-3xl font-bold mb-2">{postData.title}</h1>
+        <p className="text-sm text-gray-500 mb-4">{postData.date}</p>
+        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+      </article>
+    </Layout>
   );
 }
