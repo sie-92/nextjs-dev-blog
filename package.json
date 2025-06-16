@@ -7,11 +7,11 @@
     "start": "next start"
   },
   "dependencies": {
-    "autoprefixer": "^10.4.0",
+    "gray-matter": "^4.0.3",
     "next": "latest",
-    "postcss": "^8.4.0",
     "react": "latest",
     "react-dom": "latest",
-    "tailwindcss": "^3.0.0"
+    "remark": "^15.0.0",
+    "remark-html": "^15.0.1"
   }
 }
